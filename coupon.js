@@ -26,8 +26,6 @@ $('#store').click(function() {
     });
     return false;
 });
-//$('button.page').click(function() {
-//$('#display-area button').on('click', function(e) {
 $('#display-area').on('click','button[class="page"]', function() {
     $('#display-area').hide();
     $('#loadingmessage').show(); 
@@ -39,11 +37,7 @@ $('#display-area').on('click','button[class="page"]', function() {
     var checkedArray = $(":checkbox:checked").map(function() {
         return this.value
     }).get();
-    //var a = document.getElementById(id);
     var val = $(this).attr('value');
-    //var value = $(id).attr("value");
-    //value = parseInt(val);
-   // alert("hello " + val*);
     $.post('Filter.php', {checkedList: checkedArray, cid: getDropdownValue(), ftype: name, pageno: val, mode: 'display'}, function(result) {
         $('#display-area').html(result).show;
         $('#display-area').show();

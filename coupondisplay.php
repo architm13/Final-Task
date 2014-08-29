@@ -8,19 +8,19 @@
   <link rel="stylesheet" type="text/css" href="coupondisplay.css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="coupon.js" ></script>
-
 </head>
+
 <?php
 		include('DBFetcher.php');
 ?>
-<body>
 
+<body>
   <h2>CouponDunia</h2>
 <br/><br/>
 <span>
     <select class="category" id="category" onchange="getCategory();" style="width: 160px;">
-	<option value="" style="display:none">Choose the Category</option>
-        <?php
+	    <option value="" style="display:none">Choose the Category</option>
+    <?php
 		$fetcher = new DBFetcher();
 		$categories = $fetcher->getCategories();
 		$len = count($categories);
@@ -54,7 +54,8 @@
   <div id="display-area">
   <?php
       global $couponList;
-      if((sizeof($url_parts))==3) {
+      $last = $url_parts[sizeof($url_parts)-1];
+      if((sizeof($url_parts))==3 AND ($last != null AND $last != 'coupondisplay')) {
           $couponsList = $fetcher->getCoupons($url_parts[sizeof($url_parts)-1], null, 'all', $pageno);
     } else {
           echo "Please Choose a Category from Dropdown.";

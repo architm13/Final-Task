@@ -12,33 +12,6 @@ class DBFetcher {
 		}
 		return $res;
 	}
-
-	public function getAllCoupons($category) {
-		$con = mysqli_connect('localhost','root','', 'coupondunia');
-		global $id;
-		$cat = mysqli_query($con, "SELECT * FROM couponcategories") or die($con->error);
-		while($row = mysqli_fetch_array($cat)) {
-			if($row['URLKeyword'] == $category){
-				$id = $row['CategoryID'];
-			}
-		}
-		$res = mysqli_query($con, "SELECT * FROM Coupon AS A 
-			                INNER JOIN (SELECT * FROM CouponCategoryInfo AS B WHERE CategoryID = ".$id.") AS AB 
-			                ON A.CouponID = AB.CouponID GROUP BY A.CouponID") or die($con->error);
-		$couponInfo;
-		$i = 0;
-		while($row = mysqli_fetch_array($res)) {
-			$couponInfo[$i]["CouponCode"] = $row['CouponCode'];
-			$couponInfo[$i]["Title"] = $row['Title'];
-			$couponInfo[$i]["Description"] = $row['Description'];
-			$couponInfo[$i]["Expiry"] = $row['Expiry'];
-			$url = mysqli_fetch_array(mysqli_query($con, "SELECT AffilateURL FROM website WHERE websiteid = ".$row['WebsiteID']));
-			$couponInfo[$i]["url"] = $url['AffilateURL'];
-			$i++;
-		}
-		mysqli_close($con);
-		return $couponInfo;
-	}
     
     public function displayCoupons($couponInfo, $count, $category, $pages, $filterType) {
     	$result="<table id='customers' style='width: 60%;'><th>$category($count)</th>";
