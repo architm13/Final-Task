@@ -1,7 +1,10 @@
 <?php 
 define('MAXROWS', 20, true);
 class DBFetcher {
-
+    /**
+    This function is responsible forgetting all the categories in which coupons are avaialable.
+    It is populating it to the Dropdown box.
+    */
 	public function getCategories() {
 		$con = mysqli_connect('localhost','root','', 'coupondunia');
 		$cat = mysqli_query($con, "SELECT * FROM couponcategories") or die($con->error);
@@ -12,7 +15,9 @@ class DBFetcher {
 		}
 		return $res;
 	}
-    
+    /**
+    This Method is Handling the display of Coupons on the page after fetching the relevant information from the database.
+    */
     public function displayCoupons($couponInfo, $count, $category, $pages, $filterType) {
     	$result="<table id='customers' style='width: 60%;'><th>$category($count)</th>";
 		foreach($couponInfo as $coupon) {
@@ -38,6 +43,10 @@ class DBFetcher {
 		$result = $result."</td></tr></table>";
 		echo $result;
     }
+
+    /**
+    Responsible for building a relevant type of query according to user request and passing it to the Mysql
+    */
     public function getQuery($req, $filterType, $id) {
         switch($filterType) {
             case "subcat":
@@ -83,12 +92,20 @@ class DBFetcher {
 	    }
 
     }
+
+    /**
+    For getting the Pagination limits which will be appended to the query
+    */
     public function getLimits($pageno) {
     $limit = " LIMIT ".MAXROWS." ";
     $off = (($pageno-1) * MAXROWS);
     $offset = "OFFSET $off";
     return $limit.$offset;
     }
+
+    /**
+    main function for getting the coupons datafrom db(it is interacting with other functions for collecting the data)
+    */
 	public function getCoupons($category, $req, $filterType, $pageno) {
 		$con = mysqli_connect('localhost','root','', 'coupondunia');
 		global $id;
@@ -119,6 +136,10 @@ class DBFetcher {
 		mysqli_close($con);
 		$this->displayCoupons($couponInfo, $tot, $category, ceil($tot/MAXROWS), $filterType);
 	}
+
+	/**
+	Responsible for getting the type of subcategories,stores,coupontype on the right sidebar of the page
+	*/
 	public function fetchFilterListData($filterType, $cID, $con) {
 		switch($filterType) {
 		case 'subcat':
@@ -153,11 +174,10 @@ class DBFetcher {
 		return $result;
         break;
         case 'coupontype':
-        $cc = mysqli_query($con, "SELECT COUNT(DISTINCT A.CouponID) FROM coupon AS A INNER JOIN 
-        	              (SELECT couponcategoryinfo.CouponID FROM couponcategoryinfo WHERE CategoryID =". $cID['CategoryID'].")
+        $cc = mysqli_query($con, "SELECT COUNT(DISTINCT A.CouponID) FROM coupon 
+        	               AS A INNER JOIN (SELECT couponcategoryinfo.CouponID FROM couponcategoryinfo WHERE CategoryID =". $cID['CategoryID'].")
         	               AS B ON (A.isDeal = 0 AND (B.CouponID = A.CouponID))") or die($con->error);
-		$dc = mysqli_query($con, "SELECT COUNT(DISTINCT A.CouponID) FROM coupon AS A INNER JOIN 
-			              (SELECT couponcategoryinfo.CouponID FROM couponcategoryinfo WHERE CategoryID =". $cID['CategoryID'].") 
+		$dc = mysqli_query($con, "SELECT COUNT(DISTINCT A.CouponID) FROM coupon AS A INNER JOIN (SELECT couponcategoryinfo.CouponID FROM couponcategoryinfo WHERE CategoryID =". $cID['CategoryID'].") 
 			              AS B ON (A.isDeal = 1 AND (B.CouponID = A.CouponID))") or die($con->error);
 		$couponCount = mysqli_fetch_assoc($cc);
 		$dealCount = mysqli_fetch_assoc($dc);
@@ -174,6 +194,10 @@ class DBFetcher {
 		break;
 	    }
 	}
+
+	/**
+	main function for displaying the filterList to the user
+	*/
 	public function getFilterList($category, $filterType) {
 		$con = mysqli_connect('localhost', 'root', '', 'coupondunia');
 		$catID = mysqli_query($con, "SELECT CategoryID FROM couponcategories WHERE URLKeyword = '".$category."'") 

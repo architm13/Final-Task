@@ -1,3 +1,6 @@
+/*
+Getting the dropdown value which is being selected by the user
+*/
 function getDropdownValue() {
         var cat = document.getElementById("category");
         var catname = cat.options[cat.selectedIndex].text;
@@ -6,6 +9,9 @@ function getDropdownValue() {
 function getCategory(){
         window.location.href = "/coupondunia/" + getDropdownValue();
 }
+/*
+Contains click Listener for filter options and pagination buttons
+*/
 $(document).ready(function() {
 $('#subcat').click(function() {
     $.post('Filter.php', {filterBy: getDropdownValue(), fType: 'subcat'}, function(result) {
@@ -46,7 +52,9 @@ $('#display-area').on('click','button[class="page"]', function() {
     return false;
    });
 });
-
+/*
+Checkbox Listener Responsible for refreshing of Coupon Display Page 
+*/
 function refreshContent(val) {
     $('#display-area').hide();
     $('#loadingmessage').show(); 
