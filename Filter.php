@@ -3,28 +3,29 @@
    This is the code which is in the interacting with the user for any request
    */
    include "DBFetcher.php";
-   /**
-   For getting the Filter List
-   */
-   if(isset($_POST['filterBy'])) {
-   $filterType = $_POST['filterBy'];
-   $fType = $_POST['fType'];
-   $fetch = new DBFetcher();
-       echo $fetch->getFilterList($filterType, $fType);
-	}
-
-    /**
-    For getting the Coupon dataand displaying it on the screen
-    */
-	if(isset($_POST['mode'])) {
-		if(isset($_POST['checkedList'])) {
-		$list = $_POST['checkedList'];
-		} else {
-			$list = null;
-		}
-	$filterType = $_POST['ftype'];
-	$pageno = $_POST['pageno'];
-	$fetch = new DBFetcher();
-	   echo $fetch->getCoupons($_POST['cid'], $list, $filterType, $pageno);
-	}
+   if(isset($_POST['unfilter'])) {
+        $list = $_POST['checkedList'];
+        $unlist = $_POST['uncheckedList'];
+        $category = $_POST['category'];
+        $pageno = $_POST['pageno'];
+        $fetch = new DBFetcher();
+        $res = $fetch->getUnFilterList($category, $list, $unlist);
+        echo json_encode($res);
+    }
+    if(isset($_POST['filter'])) {
+        $list = $_POST['checkedList'];
+        $category = $_POST['category'];
+        $pageno = $_POST['pageno'];
+        $fetch = new DBFetcher();
+        $res = $fetch->getFilterList($category, $list, $pageno);
+        echo json_encode($res);
+    }
+    if(isset($_POST['display'])) {
+        $list = $_POST['checkedList'];
+        $category = $_POST['category'];
+        $pageno = $_POST['pageno'];
+        $fetch = new DBFetcher();
+        $res = $fetch->getCouponData($list,$category, $pageno);
+        echo $res;
+    }
 ?>

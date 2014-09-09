@@ -6,7 +6,7 @@
   <title>CouponDunia</title>
   
   <link rel="stylesheet" type="text/css" href="coupondisplay.css">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="jquery.js"></script>
   <script src="coupon.js" ></script>
 </head>
 
@@ -36,18 +36,6 @@
 		?>
     </select>
 
-<table>
-  <tr>
-    <th>Filter By</th>
-  </tr>
-  <tr>
-    <td>
-	<a name="subcat" id="subcat" value="subcat" href="">Sub Category</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-	<a name="ctype" id="ctype" value="ctype" href="">Coupon Type</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-	<a name="store" id="store" value="store" href="">Store</a>
-	</td>
-  </tr>
-</table>
 <div id='loadingmessage' style='display:none; width: 60%;'>
   <img src='loading.gif'/>
 </div>
@@ -56,7 +44,7 @@
       global $couponList;
       $last = $url_parts[sizeof($url_parts)-1];
       if((sizeof($url_parts))==3 AND ($last != null AND $last != 'coupondisplay')) {
-          $couponsList = $fetcher->getCoupons($url_parts[sizeof($url_parts)-1], null, 'all', $pageno);
+          $couponsList = $fetcher->getCouponData('all', $url_parts[sizeof($url_parts)-1], $pageno);
     } else {
           echo "Please Choose a Category from Dropdown.";
     }
@@ -65,15 +53,11 @@
   }
   ?>
   </div>
-</div>
-</div>
-<table id="customers" style="float:right;width: 20%">
-  <tr>
-    <th>Category Name</th>
-  </tr>
-
-  <tr id="feedback"><tr>
-</table>
+  <?php
+  if((sizeof($url_parts))==3 AND ($last != null AND $last != 'coupondisplay')) {
+      echo $fetcher->getFilters($url_parts[sizeof($url_parts)-1]);
+  }
+  ?>
 </body>
 
 </html>
